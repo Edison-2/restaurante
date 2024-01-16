@@ -1,0 +1,45 @@
+{# heredando header y footer #}
+{% extends "./plantilla.html" %}
+{% load static %}
+
+{% block contenido %}
+<div class="row">
+  <div class="col-md-2">
+  </div>
+  <div class="col-md-8">
+    <br> <br>
+    <form class="" action="/procesarActualizacionTipo/" method="post" id="frm_nuevo_provincia" >
+      {% csrf_token %}
+
+      <input type="hidden" name="id_ed"  value="{{tipo.id_ed}}">
+      <b>Nombre:</b>
+      <input type="text" name="nombre_ed" id="nombre_ed"
+      value="{{tipo.nombre_ed}}" placeholder="Ingrese el nombre "
+      class="form-control" required>
+      <b>Descripcion:</b>
+      <input type="text" name="descripcion_ed" id="descripcion_ed"
+      value="{{tipo.descripcion_ed}}" placeholder="Ingrese la descripcion"
+      class="form-control" required>
+      <br>
+      <b>Ingrese una Imagen</b>
+    <input type="text" name="fotografia" id="fotografia"
+    value="{{tipo.fotografia}}" placeholder="Ingrese la fotografia"
+    class="form-control" required>
+    <br>
+      <br>
+      <center>
+        <button type="submit" name="button"
+        class="btn btn-warning">
+          &nbsp;&nbsp;&nbsp;Editar&nbsp;&nbsp;&nbsp;
+        </button>&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/"
+        class="btn btn-danger">
+          Cancelar
+        </a>
+      </center>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+<!--  -->

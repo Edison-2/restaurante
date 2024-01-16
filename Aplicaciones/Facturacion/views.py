@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Provincia
 from .models import Cliente
 from .models import Pedido
+from .models import Tipo
 
 from django.contrib import messages
 # Create your views here.
@@ -152,3 +153,38 @@ def procesarActualizacionPedido(request):
 
     messages.success(request, 'PEDIDO ACTUALIZADO CORRECTAMENTE')
     return redirect('/listadoPedidos/')
+
+def listadoTipos(request):
+    tipoBdd = Tipo.objects.all()
+    return render(request, 'listadoTipos.html', {'tipos': tipoBdd})
+def guardarTipo(request):
+    nombre_ed=request.POST["nombre_ed"]
+    descripcion_ed=request.POST["descripcion_ed"]
+    fotografia=request.FILES.get("fotografia")
+    #Insertando datos mediante el ORM de django
+    tipo =Tipo.objects.create(nombre_ed=nombre_ed,descripcion_ed=descripcion_ed,fotografia=fotografia)
+    messages.success(request, 'TIPO GUARDADO EXITOSAMENTE')
+    return redirect('/listadoTipos/')
+def eliminarTipo(request,id_ed):
+    tipoEliminar=Tipo.objects.get(id_ed=id_ed)
+    tipoEliminar.delete()
+    messages.success(request, 'TIPO ELIMINADO EXITOSAMENTE')
+    return redirect('/listadoTipos/')
+def editarTipo(request, id_ed):
+    tipoEditar=Tipo.objects.get(id_ed=id_ed)
+    tiposBdd=Tipo.objects.all()
+    return  render(request, 'editarTipo.html',{'tipo':tipoEditar,'tipos':tiposBdd})
+def procesarActualizacionTipo(request):
+    id_ed=request.POST["id_ed"]
+    nombre_ed=request.POST["nombre_ed"]
+    descripcion_ed=request.POST["descripcion_ed"]
+    fotografia=request.POST["fotografia"]
+    #Insertando datos mediante el ORM de DJANGO
+    tipoEditar=Tipo.objects.get(id_ed=id_ed)
+    tipoEditar.nombre_ed=nombre_ed
+    tipoEditar.descripcion_ed=descripcion_ed
+    tipoEditar.fotografia=fotografia
+    tipoEditar.save()
+    messages.success(request,
+      'SU TIPO DE PLATILLO ACTUALIZADO EXITOSAMENTE')
+    return redirect('/listadoTipos/')

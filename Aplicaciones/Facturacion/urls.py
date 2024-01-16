@@ -17,5 +17,10 @@ urlpatterns=[
     path('guardarPedido/',views.guardarPedido),
     path('editarPedido/<id_ed>' ,views.editarPedido),
     path('procesarActualizacionPedido/', views.procesarActualizacionPedido),
+    path('listadoTipos/',views.listadoTipos),
+    path('eliminarTipo/<id_ed>' ,views.eliminarTipo),
+    path('guardarTipo/',views.guardarTipo),
+    path('editarTipo/<id_ed>' ,views.editarTipo),
+    path('procesarActualizacionTipo/', views.procesarActualizacionTipo),
     
 ]

@@ -1,0 +1,153 @@
+{% extends "./plantilla.html"%}
+  {% load static %}
+  {%block contenido%}
+
+    <h1>TIPOS DE COMIDA </h1>
+    <br>
+    <ul>
+
+        <div class="row">
+          <div class="col-md-5" style="overflow-y: auto; max-height: 400px;">
+                <form action="/guardarTipo/" method="post" enctype="multipart/form-data" id="frm_nuevo_tipo">
+                    {% csrf_token %}
+                    <br>
+                    <b>Nombre:</b>
+                    <input type="text" name="nombre_bg" value="" id="nombre_bg" placeholder="Ingrese el nombre" class="form-control" required>
+                    <br>
+                    <b>descripcion:</b>
+                    <input type="text" name="descripcion_bg" value="" id="descripcion_bg" placeholder="Ingrese la descripcion" class="form-control" required>
+                    <br>
+                    <b>Imagen:</b>
+                    <input type="file" name="fotografia" accept="image/*" id="fotografia"  required>
+                    <br>
+                    <center>
+                        <button type="submit" name="button" class="btn btn-primary">Guardar</button>
+                        &nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;
+                        <button type="submit" name="button" class="btn btn-danger">Cancelar</button>
+                    </center>
+                </form>
+            </div>
+            <div class="col-md-7">
+        <div class="d-flex justify-content-center align-items-center">
+          <img class="imagen img-fluid" src="{% static 'img/uni.png' %}" alt="" style="max-width: 800px; height: auto;">
+        </div>
+        <br>
+                <table class="table" id="tbl_tipos">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>NOMBRE</th>
+                            <th>DESCRIPCION</th>
+                            <th>IMAGEN</th>
+                            <th>ACCIONES</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for tipo in tipos %}
+                            <tr>
+                                <td>{{ tipo.id_bg }}</td>
+                                <td>{{ tipo.nombre_bg }}</td>
+                                <td>{{ tipo.descripcion_bg }}</td>
+                                <td>{% if tipo.fotografia %}
+                                    <a href="{{tipo.fotografia.url}}" target="_blank">
+                                        <img src="{{tipo.fotografia.url}}" alt="" height="50px"></a>
+                                    {% else %}
+                                    <b>N/A</b>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="/editarTipo/{{tipo.id_bg}}" class="btn btn-warning">Editar</a>
+                                    <a href="javascript:void(0)"
+                                    onclick="eliminarTipo('/eliminarTipo/{{tipo.id_bg}}');"class="btn btn-danger">Eliminar</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <!-- Agregar una fila para la imagen debajo de la tabla -->
+            <br>
+
+
+    </ul>
+
+    <script type="text/javascript">
+function eliminarTipo(url) {
+  iziToast.question({
+      timeout: 15000,
+      close: true,
+      overlay: true,
+      displayMode: 'once',
+      id: 'question',
+      zindex: 999,
+      title: 'CONFIRMACIÓN',
+      message: '¿Está seguro de eliminar el cliente seleccionado?',
+      position: 'center',
+      buttons: [
+          ['<button><b>SI</b></button>', function (instance, toast) {
+              instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+              window.location.href=url;
+          }, true],
+          ['<button>NO</button>', function (instance, toast) {
+
+              instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+
+          }],
+      ]
+  });
+}
+</script>
+    <script type="text/javascript">
+       $("#frm_nuevo_tipo").validate({
+         rules:{
+           "nombre_bg":{
+             required:true,
+             number:false
+
+           },
+           "descripcion_bg":{
+             required:true
+           },
+           "fotografia":{
+             required:true
+           }
+
+         },
+         messages:{
+
+           "nombre_bg":{
+             required:"DEBE INGRESAR EL NOMBRE DEL TIPO DE PLATO"
+
+           },
+           "descripcion_bg": {
+             required: "DEBE INGRESAR LA DESCRIPCION DEL TIPO DE PLATO",
+           },
+           "fotografia":{
+             required:"SELECCIONE LA FOTOGRAFIA "
+           }
+         }
+       });
+    </script>
+
+    <script type="text/javascript">
+           //let table = new DataTable('#tbl_clientes');
+            $('#tbl_tipos').DataTable( {
+              "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+            },
+              dom: 'Bfrtip',
+              buttons: [
+                  {
+                      extend: 'pdfHtml5',
+                      messageTop: 'REPORTE DE CLIENTES - DJANGO Y DATATABLES.'
+                  },
+                  'print',
+                  'csv'
+              ]
+            } );
+          </script>
+
+
+  {%endblock%}

@@ -39,3 +39,13 @@ class Pedido(models.Model):
     def __str__(self):
         fila="{0}: {1} {2} "
         return fila.format(self.id_ed, self.fecha_ed, self.estado_ed)
+
+class Tipo(models.Model):
+    id_ed = models.AutoField(primary_key=True)
+    nombre_ed = models.CharField(max_length=150)
+    descripcion_ed = models.TextField()
+    fotografia=models.FileField(upload_to='tipo', null=True,blank=True)
+
+    def __str__(self):
+        fila="{0}: {1} {2} "
+        return fila.format(self.id_ed, self.nombre_ed, self.descripcion_ed)
