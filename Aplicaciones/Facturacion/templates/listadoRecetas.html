@@ -2,13 +2,13 @@
   {% load static %}
   {%block contenido%}
 
-    <h1>LISTADO DE RECETAS</h1>
+    <h1>RECETAS <i class="fas fa-book-open"></i> </h1>
     <br>
     <ul>
 
         <div class="row">
 
-              <div class="col-md-5" style="overflow-y: auto; max-height: 400px;">
+              <div class="col-md-4" style="overflow-y: auto; ">
                 <form action="/guardarReceta/" method="post" enctype="multipart/form-data" id="frm_nuevo_receta">
                     {% csrf_token %}
                     <b>SELECCIONE EL INGREDIENTE</b>
@@ -16,42 +16,42 @@
                       <option value="">--SELECCIONE EL INGREDIENTE  </option>
                       {% for ingrediente in ingredientes %}
                       <option value="{{ingrediente.id_ed}}">
-                        {{ingrediente.nombre_ed}}-{{ingrediente.cantidad_disponible_ed}}--{{ingrediente.fecha_caducidad_ed}}
+                        {{ingrediente.nombre_ed}}--{{ingrediente.cantidad_disponible_ed}}--{{ingrediente.fecha_caducidad_ed}}
                       </option>
                       {% endfor %}
                     </select>
                     <br>
                     <b>SELECCIONE EL PLATILLO</b>
                     <select class="form-control" name="id_platillo" required>
-                      <option value="">--SELECCIONE EL PLATILLO  </option>
+                      <option value="">--SELECCIONE EL PLATILLO--  </option>
                       {% for platillo in platillos %}
                       <option value="{{platillo.id_ed}}">
-                        {{platillo.nombre_ed}}-{{platillo.precio_ed}}
+                        {{platillo.nombre_ed}} -- {{platillo.precio_ed}}
                       </option>
                       {% endfor %}
                     </select>
 
                     <br>
 
-                      <b>CANTIDAD: </b>
+                      <b>N° PORCIONES: </b>
                       <input type="text" name="cantidad_ed" id="cantidad_ed" class="form-control" placeholder="Ingrese el estado(Disponible-No disponible)" required>
                       <br>
-                      <b>PROCEDIMIENTO:</b>
-                      <input type="text" name="procedimiento_ed" value="" id="procedimiento_ed " placeholder="Ingrese las calorias" class="form-control" required>
+                      <b>DESCRIPCION DE LA RECETA:</b>
+                      <input type="text" name="procedimiento_ed" value="" id="procedimiento_ed " placeholder="Ingrese el proceso" class="form-control" required>
 
 
                         <br>
 
                     <center>
-                        <button type="submit" name="button" class="btn btn-primary">Guardar</button>
+                        <button type="submit" name="button" class="btn btn-primary"><i class="fas fa-save"></i>Guardar</button>
                         &nbsp;&nbsp;&nbsp;
                         &nbsp;&nbsp;&nbsp;
                         &nbsp;&nbsp;&nbsp;
-                        <button type="submit" name="button" class="btn btn-danger">Cancelar</button>
+                        <button type="submit" name="button" class="btn btn-danger"><i class="fas fa-times"></i> Cancelar</button>
                     </center>
                 </form>
             </div>
-            <div class="col-md-7">
+            <div class="col-md-8">
         <div class="d-flex justify-content-center align-items-center">
           <img class="imagen img-fluid" src="{% static 'img/uni.png' %}" alt="" style="max-width: 800px; height: auto;">
         </div>
@@ -60,10 +60,10 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>CANTIDAD</th>
+                            <th>NUMERO DE ORDENES</th>
+                            <th>PLATILLO</th>
                             <th>PROCEDIMIENTO</th>
                             <th>INGREDIENTE</th>
-                            <th>PLATILLO</th>
                             <th>ACCIONES</th>
                         </tr>
                     </thead>
@@ -72,15 +72,15 @@
                             <tr>
                                 <td>{{ receta.id_ed }}</td>
                                 <td>{{ receta.cantidad_ed }}</td>
+                                <td>{{receta.platillo_ed.nombre_ed}}</td>
                                 <td>{{ receta.procedimiento_ed }}</td>
                                 <td>{{receta.ingrediente_ed.nombre_ed}}</td>
-                                <td>{{receta.platillo_ed.nombre_ed}}</td>
 
 
                                 <td>
-                                    <a href="/editarReceta/{{receta.id_ed}}" class="btn btn-warning">Editar</a>
+                                    <a href="/editarReceta/{{receta.id_ed}}" class="btn btn-warning"> <i class="fas fa-edit"></i> Editar</a>
                                     <a href="javascript:void(0)"
-                                    onclick="eliminarReceta('/eliminarReceta/{{receta.id_ed}}');"class="btn btn-danger">Eliminar</a>
+                                    onclick="eliminarReceta('/eliminarReceta/{{receta.id_ed}}');"class="btn btn-danger"><i class="fas fa-trash-alt"></i>Eliminar</a>
                                 </td>
                             </tr>
                         {% endfor %}

@@ -2,12 +2,12 @@
   {% load static %}
   {%block contenido%}
 
-    <h1>LISTADO DE INGREDIENTES</h1>
+    <h1><i class="fas fa-carrot"></i>INGREDIENTES </h1>
     <br>
     <ul>
 
         <div class="row">
-          <div class="col-md-5" style="overflow-y: auto; max-height: 400px;">
+          <div class="col-md-4" style="overflow-y: auto;">
                 <form action="/guardarIngrediente/" method="post" enctype="multipart/form-data" id="frm_nuevo_ingrediente">
                     {% csrf_token %}
                     <br>
@@ -15,28 +15,28 @@
                     <input type="text" name="nombre_ed" value="" id="nombre_ed" placeholder="Ingrese el nombre" class="form-control" required>
                     <br>
                     <b>CANTIDAD DISPONIBLE:</b>
-                    <input type="CharField" name="cantidad_disponible_ed" value="" id="cantidad_disponible_ed" placeholder="Ingrese la cantidad disponible" class="form-control" required>
+                    <input type="CharField" name="descripcion_ed" value="" id="descripcion_ed" placeholder="Ingrese la cantidad disponible" class="form-control" required>
                     <br>
                     <b>UNIDAD DE MEDIDA:</b>
-                    <input type="CharField" name="unidad_medida_ed" value="" id="unidad_medida_ed" placeholder="Ingrese la unidad de medida" class="form-control" required>
+                    <input type="CharField" name="unidad_medida_ed" value="" id="unidad_medida_ed" placeholder=" Unidad de medida (Litros,Quilos,Libras,Quintales)" class="form-control" required>
                     <br>
                     <b>FECHA DE CADUCIDAD:</b>
                     <input type="date" name="fecha_caducidad_ed" value="" class="form-control" placeholder="Ingrese la fecha de caducidad " required>
                     <br>
-                    <b>FOTOGRAFIA:</b>
+                    <b>IMAGEN:</b>
                     <input type="file" name="fotografia" accept="image/*" id="fotografia" required>
                     <br>
 
                     <center>
-                        <button type="submit" name="button" class="btn btn-primary">Guardar</button>
+                        <button type="submit" name="button" class="btn btn-primary"><i class="fas fa-save"></i> Guardar</button>
                         &nbsp;&nbsp;&nbsp;
                         &nbsp;&nbsp;&nbsp;
                         &nbsp;&nbsp;&nbsp;
-                        <button type="submit" name="button" class="btn btn-danger">Cancelar</button>
+                        <button type="submit" name="button" class="btn btn-danger"><i class="fas fa-times"></i> Cancelar</button>
                     </center>
                 </form>
             </div>
-            <div class="col-md-7">
+            <div class="col-md-8">
         <div class="d-flex justify-content-center align-items-center">
           <img class="imagen img-fluid" src="{% static 'img/uni.png' %}" alt="" style="max-width: 800px; height: auto;">
         </div>
@@ -58,7 +58,7 @@
                             <tr>
                                 <td>{{ ingrediente.id_ed }}</td>
                                 <td>{{ ingrediente.nombre_ed }}</td>
-                                <td>{{ ingrediente.cantidad_disponible_ed }}</td>
+                                <td>{{ ingrediente.descripcion_ed }}</td>
                                 <td>{{ ingrediente.unidad_medida_ed }}</td>
                                 <td>{{ ingrediente.fecha_caducidad_ed }}</td>
                                 <td>{% if ingrediente.fotografia %}
@@ -69,9 +69,9 @@
                                     {% endif %}
                                 </td>
                                 <td>
-                                    <a href="/editarIngrediente/{{ingrediente.id_ed}}" class="btn btn-warning">Editar</a>
+                                    <a href="/editarIngrediente/{{ingrediente.id_ed}}" class="btn btn-warning"> <i class="fas fa-edit"></i> Editar</a>
                                     <a href="javascript:void(0)"
-                                    onclick="eliminarIngrediente('/eliminarIngrediente/{{ingrediente.id_ed}}');"class="btn btn-danger">Eliminar</a>
+                                    onclick="eliminarIngrediente('/eliminarIngrediente/{{ingrediente.id_ed}}');"class="btn btn-danger"><i class="fas fa-trash-alt"></i> Eliminar</a>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -111,13 +111,17 @@ function eliminarIngrediente(url) {
 }
 </script>
     <script type="text/javascript">
+      $.validator.addMethod("notPastDate", function(value, element) {
+        var selectedDate = new Date(value);
+        var currentDate = new Date();
+        return selectedDate >= currentDate;
        $("#frm_nuevo_ingrediente").validate({
          rules:{
            "nombre_ed":{
              required:true
 
            },
-           "cantidad_disponible_ed":{
+           "descripcion_ed":{
              required:true,
            },
            "unidad_medida_ed":{
@@ -127,8 +131,10 @@ function eliminarIngrediente(url) {
              required:true
            },
            "fecha_caducidad_ed":{
-             required:true
-           },
+             required:true,
+             date:true,
+             notPastDate: true
+           }
 
          },
          messages:{
@@ -137,7 +143,7 @@ function eliminarIngrediente(url) {
              required:"DEBE INGRESAR EL NOMBRE DEL INGREDIENTE"
 
            },
-           "cantidad_disponible_ed": {
+           "descripcion_ed": {
              required: "DEBE INGRESAR LA CANTIDAD DISPONIBLE DEL INGREDIENTE",
 
            },
@@ -148,8 +154,10 @@ function eliminarIngrediente(url) {
            "fotografia":{
              required:"SELECCIONE LA FOTOGRAFIA DEL INGREDIENTE"
            },
-           "fecha_caducidad_ed":{
-             required:"SELECCIONE LA FECHA DE CADUCIDAD DEL INGREDIENTE"
+           "fecha_caducidad_bg":{
+             required:"SELECCIONE LA FECHA DE CADUCIDAD DEL INGREDIENTE",
+             date: "INGRESE UNA FECHA VALIDA",
+             notPastDate: "LA FECHA NO PUEDE SER ANTERIOR A LA FECHA ACTUAL"
            }
          }
        });

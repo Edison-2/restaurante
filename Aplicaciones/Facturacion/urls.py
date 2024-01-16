@@ -1,7 +1,9 @@
 from django.urls import path
 from . import views
+from .views import index
 
 urlpatterns=[
+    path('index/', views.index),
     path('',views.listadoProvincias),
     path('guardarProvincia/',views.guardarProvincia),
     path('eliminarProvincia/<id_ed>' ,views.eliminarProvincia),

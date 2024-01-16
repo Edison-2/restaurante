@@ -43,6 +43,7 @@ class Tipo(models.Model):
     id_ed = models.AutoField(primary_key=True)
     nombre_ed = models.CharField(max_length=150)
     descripcion_ed = models.TextField()
+    categoria_ed=models.CharField(max_length=150, null=True,blank=True)
     fotografia=models.FileField(upload_to='tipo', null=True,blank=True)
 
     def __str__(self):

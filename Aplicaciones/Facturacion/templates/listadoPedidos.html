@@ -2,13 +2,13 @@
   {% load static %}
   {%block contenido%}
 
-    <h1>Listado de Pedidos</h1>
+    <h1><i class="fas fa-shopping-cart"></i>Pedidos</h1>
     <br>
     <ul>
 
         <div class="row">
 
-              <div class="col-md-5" style="overflow-y: auto; max-height: 400px;">
+              <div class="col-md-4" style="overflow-y: auto; ">
                 <form action="/guardarPedido/" method="post" enctype="multipart/form-data" id="frm_nuevo_pedido">
                     {% csrf_token %}
                     <b>Cliente:</b>
@@ -17,7 +17,7 @@
                       <option value="">--SELECCIONE EL CLIENTE--</option>
                       {% for cliente in clientes %}
                       <option value="{{cliente.id_ed}}">
-                        {{cliente.nombre_ed}}-{{cliente.apellido_ed}}
+                        {{cliente.nombre_ed}} {{cliente.apellido_ed}}
                       </option>
                       {% endfor %}
                     </select>
@@ -34,25 +34,26 @@
                         <br>
 
                     <center>
-                        <button type="submit" name="button" class="btn btn-primary">Guardar</button>
+                        <button type="submit" name="button" class="btn btn-primary"><i class="fas fa-save"></i> Guardar</button>
                         &nbsp;&nbsp;&nbsp;
                         &nbsp;&nbsp;&nbsp;
                         &nbsp;&nbsp;&nbsp;
-                        <button type="submit" name="button" class="btn btn-danger">Cancelar</button>
+                        <button type="submit" name="button" class="btn btn-danger"><i class="fas fa-times"></i> Cancelar</button>
                     </center>
                 </form>
             </div>
-            <div class="col-md-7">
+            <div class="col-md-8">
         <div class="d-flex justify-content-center align-items-center">
-          <img class="imagen img-fluid" src="{% static 'img/uni.png' %}" alt="" style="max-width: 800px; height: auto;">
+          <img class="imagen img-fluid" src="{% static 'img/uni.png' %}" alt="" style="max-width: 800px; height: auto;">||
         </div>
         <br>
                 <table class="table" id="tbl_pedidos">
                     <thead>
                         <tr>
                             <th>ID</th>
+                            <th>CLIENTE</th>
+                            <th>ESTADO DEL PEDIDO</th>
                             <th>FECHA</th>
-                            <th>ESTADO</th>
                             <th>DETALLE</th>
                             <th>ACCIONES</th>
                         </tr>
@@ -61,15 +62,15 @@
                         {% for pedido in pedidos %}
                             <tr>
                                 <td>{{ pedido.id_ed }}</td>
-                                <td>{{ pedido.fecha_ed }}</td>
-                                <td>{{ pedido.estado_ed }}</td>
-                                <td>{{ pedido.observaciones_ed }}</td>
                                 <td>{{pedido.cliente_ed.nombre_ed}}</td>
+                                <td>{{ pedido.estado_ed }}</td>
+                                <td>{{ pedido.fecha_ed }}</td>
+                                <td>{{ pedido.observaciones_ed }}</td>
 
                                 <td>
-                                    <a href="/editarPedido/{{pedido.id_ed}}" class="btn btn-warning">Editar</a>
+                                    <a href="/editarPedido/{{pedido.id_ed}}" class="btn btn-warning"> <i class="fas fa-edit"></i> Editar</a>
                                     <a href="javascript:void(0)"
-                                    onclick="eliminarPedido('/eliminarPedido/{{pedido.id_ed}}');"class="btn btn-danger">Eliminar</a>
+                                    onclick="eliminarPedido('/eliminarPedido/{{pedido.id_ed}}');"class="btn btn-danger"><i class="fas fa-trash-alt"></i> Eliminar</a>
                                 </td>
                             </tr>
                         {% endfor %}

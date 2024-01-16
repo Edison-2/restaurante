@@ -12,51 +12,54 @@ label.error{
 input.error, select.error, textarea.error{
   border: 1px solid red;
 }
+/* Estilos para la barra de navegación */
+.nav-link {
+  padding-top: 0px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  font-size: 23px; /* Puedes ajustar el tamaño del texto según tus preferencias */
+  color: #333; /* Color por defecto del texto */
+  text-decoration: none;
+  transition: color 0.3s ease; /* Transición de color al pasar el cursor */
+}
+
+/* Estilos cuando el cursor pasa por encima */
+
 
 body {
   margin: 0;
   padding: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(to right, #dcdcdc, #f8f8f8); /* Fondo degradado de gris claro a gris más claro */
+  font-family: 'Poppins', sans-serif;
+  background-image: url('ruta_de_la_imagen.jpg'); /* Reemplaza 'ruta_de_la_imagen.jpg' con la ruta de tu imagen */
+  background-size: cover; /* Ajusta el tamaño de la imagen para cubrir todo el fondo */
+  background-position: center; /* Centra la imagen en el fondo */
+  background-repeat: no-repeat; /
+
+}
+footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #333;
+    color: #fff;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
 }
 
 
-
        h1 {
-           text-align: center;
+           text-align: left;
+           padding-left: 30px;
        }
 
        .row {
            margin: 20px 0;
        }
 
-       .col-md-5 {
-           background-color: #f8f9fa;
-           padding: 20px;
-           border-radius: 10px;
-       }
 
        .imagen {
            width: 100px;
            border-radius: 10px;
            margin-top: 20px;
-       }
-
-       footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  background-color: #333;
-  color: #fff;
-  padding: 20px;
-  text-align: center;
-}
-
-       footer a {
-           color: #fff;
-           text-decoration: none;
-       }
-
-       footer a:hover {
-           text-decoration: underline;
        }

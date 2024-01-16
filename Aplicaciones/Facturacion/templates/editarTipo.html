@@ -8,7 +8,7 @@
   </div>
   <div class="col-md-8">
     <br> <br>
-    <form class="" action="/procesarActualizacionTipo/" method="post" id="frm_nuevo_provincia" >
+    <form class="" action="/procesarActualizacionTipo/" method="post" enctype="multipart/form-data" id="frm_nuevo_provincia" >
       {% csrf_token %}
 
       <input type="hidden" name="id_ed"  value="{{tipo.id_ed}}">
@@ -16,16 +16,20 @@
       <input type="text" name="nombre_ed" id="nombre_ed"
       value="{{tipo.nombre_ed}}" placeholder="Ingrese el nombre "
       class="form-control" required>
-      <b>Descripcion:</b>
+      <b>Descripción:</b>
       <input type="text" name="descripcion_ed" id="descripcion_ed"
-      value="{{tipo.descripcion_ed}}" placeholder="Ingrese la descripcion"
+      value="{{tipo.descripcion_ed}}" placeholder="Ingrese la descripción"
       class="form-control" required>
       <br>
-      <b>Ingrese una Imagen</b>
-    <input type="text" name="fotografia" id="fotografia"
-    value="{{tipo.fotografia}}" placeholder="Ingrese la fotografia"
-    class="form-control" required>
-    <br>
+      <b>Categoría:</b>
+      <input type="text" name="categoria_ed" id="categoria_ed"
+      value="{{tipo.categoria_ed}}" placeholder="Ingrese la categoría"
+      class="form-control" required>
+      <br>
+      <b>Ingrese una Imagen:</b>
+      <input type="file" name="fotografia" id="fotografia"
+      accept="image/*" class="form-control" required>
+      <br>
       <br>
       <center>
         <button type="submit" name="button"
@@ -41,5 +45,3 @@
   </div>
 </div>
 {% endblock %}
-
-<!--  -->

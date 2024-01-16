@@ -8,8 +8,14 @@ from .models import Detalle
 from .models import Ingrediente
 from .models import Receta
 
+
+
 from django.contrib import messages
 # Create your views here.
+def index(request):
+    # Tu lógica aquí
+    return render(request, 'index.html')
+
 def listadoProvincias(request):
     restauramteBdd=Provincia.objects.all()
     return render(request,"listadoProvincias.html",{'provincias':restauramteBdd})
@@ -158,39 +164,52 @@ def procesarActualizacionPedido(request):
     messages.success(request, 'PEDIDO ACTUALIZADO CORRECTAMENTE')
     return redirect('/listadoPedidos/')
 
+
 def listadoTipos(request):
     tipoBdd = Tipo.objects.all()
     return render(request, 'listadoTipos.html', {'tipos': tipoBdd})
+
+
 def guardarTipo(request):
-    nombre_ed=request.POST["nombre_ed"]
-    descripcion_ed=request.POST["descripcion_ed"]
-    fotografia=request.FILES.get("fotografia")
-    #Insertando datos mediante el ORM de django
-    tipo =Tipo.objects.create(nombre_ed=nombre_ed,descripcion_ed=descripcion_ed,fotografia=fotografia)
-    messages.success(request, 'TIPO GUARDADO EXITOSAMENTE')
+    nombre_ed = request.POST["nombre_ed"]
+    descripcion_ed = request.POST["descripcion_ed"]
+    categoria_ed = request.POST.get("categoria_ed")  # Agregando la obtención de la categoría desde el formulario
+    fotografia = request.FILES.get("fotografia")
+    # Insertando datos mediante el ORM de Django
+    tipo = Tipo.objects.create(nombre_ed=nombre_ed, descripcion_ed=descripcion_ed, categoria_ed=categoria_ed, fotografia=fotografia)
+    messages.success(request, 'TIPO DE COMIDA GUARDADO EXITOSAMENTE')
     return redirect('/listadoTipos/')
+
+
 def eliminarTipo(request,id_ed):
     tipoEliminar=Tipo.objects.get(id_ed=id_ed)
     tipoEliminar.delete()
-    messages.success(request, 'TIPO ELIMINADO EXITOSAMENTE')
+    messages.success(request, 'TIPO DE COMIDA ELIMINADO EXITOSAMENTE')
     return redirect('/listadoTipos/')
 def editarTipo(request, id_ed):
     tipoEditar=Tipo.objects.get(id_ed=id_ed)
     tiposBdd=Tipo.objects.all()
     return  render(request, 'editarTipo.html',{'tipo':tipoEditar,'tipos':tiposBdd})
 def procesarActualizacionTipo(request):
-    id_ed=request.POST["id_ed"]
-    nombre_ed=request.POST["nombre_ed"]
-    descripcion_ed=request.POST["descripcion_ed"]
-    fotografia=request.POST["fotografia"]
-    #Insertando datos mediante el ORM de DJANGO
-    tipoEditar=Tipo.objects.get(id_ed=id_ed)
-    tipoEditar.nombre_ed=nombre_ed
-    tipoEditar.descripcion_ed=descripcion_ed
-    tipoEditar.fotografia=fotografia
+    id_ed = request.POST["id_ed"]
+    nombre_ed = request.POST["nombre_ed"]
+    descripcion_ed = request.POST["descripcion_ed"]
+    categoria_ed = request.POST.get("categoria_ed")  # Agregando la obtención de la categoría desde el formulario
+    fotografia = request.FILES.get("fotografia")  # Usando FILES para obtener el archivo
+
+    # Obteniendo el objeto Tipo a actualizar
+    tipoEditar = Tipo.objects.get(id_ed=id_ed)
+
+    # Actualizando los campos del objeto
+    tipoEditar.nombre_ed = nombre_ed
+    tipoEditar.descripcion_ed = descripcion_ed
+    tipoEditar.categoria_ed = categoria_ed  # Agregando la actualización del campo de categoría
+    tipoEditar.fotografia = fotografia
+
+    # Guardando los cambios en la base de datos
     tipoEditar.save()
-    messages.success(request,
-      'SU TIPO DE PLATILLO ACTUALIZADO EXITOSAMENTE')
+
+    messages.success(request, 'SU TIPO DE COMIDA FUE ACTUALIZADO CORRECTAMENTE')
     return redirect('/listadoTipos/')
 
 def listadoPlatillos(request):
