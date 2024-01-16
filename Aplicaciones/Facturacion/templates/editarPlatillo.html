@@ -1,0 +1,63 @@
+{% extends "./plantilla.html" %}
+{% load static %}
+
+{% block contenido %}
+<div class="row">
+  <div class="col-md-2">
+  </div>
+  <div class="col-md-8">
+    <br> <br>
+    <form class="" action="/procesarActualizacionPlatillo/" method="post">
+
+      {% csrf_token %}
+      <b>Seleccione el tipo</b>
+      <select class="form-control" name="id_tipo" id="id_tipo" required>
+        <option value="">--Seleccione el tipo  --</option>
+        {% for tipo in tipos %}
+        <option value="{{tipo.id_ed}}">{{tipo.nombre_ed}}  </option>
+        {% endfor %}
+      </select>
+      <script type="text/javascript">
+          document.getElementById('id_tipo').value="{{platillo.tipo_ed.id_ed}}"
+      </script>
+
+<br>
+
+<input type="hidden" name="id_ed" value="{{platillo.id_ed}}">
+<b>NOMBRE</b>
+<br>
+<input type="text" name="nombre_ed" id="nombre_ed"
+       value="{{platillo.nombre_ed}}" placeholder="Ingrese el nombre"
+       class="form-control" required>
+<br>
+      <b>PRECIO</b>
+      <br>
+      <input type="number" name="precio_ed" id="precio_ed"
+             value="{{platillo.precio_ed}}" placeholder="Ingrese el precio"
+             class="form-control" required>
+      <br>
+      <b>DISPONIBILIDAD</b>
+      <input type="text" name="disponibilidad_ed" id="disponibilidad_ed"
+             value="{{platillo.disponibilidad_ed}}" placeholder="Ingrese la disponibilidad"
+             class="form-control" required>
+      <br>
+      <b>INGRESE LA IMAGEN</b>
+    <input type="text" name="fotografia" id="fotografia"
+    value="{{platillo.fotografia}}" placeholder="Ingrese la fotografia"
+    class="form-control" required>
+    <br>
+
+      <center>
+        <button type="submit" name="button"
+                class="btn btn-warning">
+          &nbsp;&nbsp;&nbsp;Editar&nbsp;&nbsp;&nbsp;
+        </button>&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/"
+           class="btn btn-danger">
+          Cancelar
+        </a>
+      </center>
+    </form>
+  </div>
+</div>
+{% endblock %}

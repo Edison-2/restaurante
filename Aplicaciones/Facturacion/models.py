@@ -49,3 +49,15 @@ class Tipo(models.Model):
     def __str__(self):
         fila="{0}: {1} {2} "
         return fila.format(self.id_ed, self.nombre_ed, self.descripcion_ed)
+
+class Platillo(models.Model):
+    id_ed = models.AutoField(primary_key=True)
+    nombre_ed = models.CharField(max_length=100)
+    precio_ed = models.DecimalField(max_digits=10, decimal_places=2)
+    disponibilidad_ed = models.CharField(max_length=50)
+    fotografia=models.FileField(upload_to='platillo', null=True,blank=True)
+    tipo_ed = models.ForeignKey(Tipo, null=True, blank=True, on_delete=models.PROTECT)
+
+    def __str__(self):
+        fila="{0}: {1} {2} {3}"
+        return fila.format(self.id_ed, self.nombre_ed, self.precio_ed, self.disponibilidad_ed)

@@ -3,6 +3,7 @@ from .models import Provincia
 from .models import Cliente
 from .models import Pedido
 from .models import Tipo
+from .models import Platillo
 
 from django.contrib import messages
 # Create your views here.
@@ -188,3 +189,52 @@ def procesarActualizacionTipo(request):
     messages.success(request,
       'SU TIPO DE PLATILLO ACTUALIZADO EXITOSAMENTE')
     return redirect('/listadoTipos/')
+
+def listadoPlatillos(request):
+    platillosBdd = Platillo.objects.all()
+    tipoBdd = Tipo.objects.all()
+    return render(request, 'listadoPlatillos.html', {'platillos': platillosBdd, 'tipos': tipoBdd})
+def guardarPlatillo(request):
+    id_tipo=request.POST["id_tipo"]
+    #capturando el tipo seleccionado por el usuario
+    tipoSeleccionado=Tipo.objects.get(id_ed=id_tipo)
+    nombre_ed=request.POST["nombre_ed"]
+    precio_ed=request.POST["precio_ed"]
+    disponibilidad_ed=request.POST["disponibilidad_ed"]
+    fotografia=request.FILES.get("fotografia")
+    #Insertando datos mediante el ORM de django
+    platillo =Platillo.objects.create(nombre_ed=nombre_ed,precio_ed=precio_ed,disponibilidad_ed=disponibilidad_ed,fotografia=fotografia,tipo_ed=tipoSeleccionado)
+    messages.success(request, 'CLIENTE GUARDADO EXITOSAMENTE')
+    return redirect('/listadoPlatillos/')
+def eliminarPlatillo(request,id_ed):
+    platilloEliminar=Platillo.objects.get(id_ed=id_ed)
+    platilloEliminar.delete()
+    messages.success(request, 'PLATILLO ELIMINADO EXITOSAMENTE')
+    return redirect('/listadoPlatillos/')
+def editarPlatillo(request, id_ed):
+    platilloEditar=Platillo.objects.get(id_ed=id_ed)
+    platillosBdd=Tipo.objects.all()
+    tipoBdd=Tipo.objects.all()
+    return  render(request, 'editarPlatillo.html',{'platillo':platilloEditar,'platillos':platillosBdd, 'tipos':tipoBdd})
+
+def procesarActualizacionPlatillo(request):
+    id_ed = request.POST["id_ed"]
+    id_tipo = request.POST["id_tipo"]
+    tipoSeleccionado = Tipo.objects.get(id_ed=id_tipo)
+    nombre_ed = request.POST["nombre_ed"]
+    precio_ed = request.POST["precio_ed"]
+    disponibilidad_ed = request.POST["disponibilidad_ed"]
+    fotografia=request.POST["fotografia"]
+
+    # Insertando datos mediante el ORM de DJANGO
+    platilloEditar = Platillo.objects.get(id_ed=id_ed)
+    platilloEditar.tipo_ed = tipoSeleccionado  # Corregido el nombre del campo
+    platilloEditar.nombre_ed = nombre_ed
+    platilloEditar.precio_ed = precio_ed  # Corregido el nombre del campo
+    platilloEditar.disponibilidad_ed = disponibilidad_ed
+    platilloEditar.fotografia=fotografia
+
+    platilloEditar.save()
+
+    messages.success(request, 'PLATILLO ACTUALIZADO CORRECTAMENTE')
+    return redirect('/listadoPlatillos/')

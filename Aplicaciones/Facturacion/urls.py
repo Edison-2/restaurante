@@ -22,5 +22,10 @@ urlpatterns=[
     path('guardarTipo/',views.guardarTipo),
     path('editarTipo/<id_ed>' ,views.editarTipo),
     path('procesarActualizacionTipo/', views.procesarActualizacionTipo),
+    path('listadoPlatillos/',views.listadoPlatillos),
+    path('eliminarPlatillo/<id_ed>' ,views.eliminarPlatillo),
+    path('guardarPlatillo/',views.guardarPlatillo),
+    path('editarPlatillo/<id_ed>' ,views.editarPlatillo),
+    path('procesarActualizacionPlatillo/', views.procesarActualizacionPlatillo),
     
 ]
