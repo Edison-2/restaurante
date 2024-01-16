@@ -1,0 +1,69 @@
+{% extends "./plantilla.html" %}
+{% load static %}
+
+{% block contenido %}
+<div class="row">
+  <div class="col-md-2">
+  </div>
+  <div class="col-md-8">
+    <br> <br>
+    <form class="" action="/procesarActualizacionCliente/" method="post">
+
+      {% csrf_token %}
+      <b>SELECCIONE LA PROVINCIA</b>
+      <select class="form-control" name="id_provincia" id="id_provincia" required>
+        <option value="">--Seleccione la provincia--</option>
+        {% for provincia in provincias %}
+          <option value="{{provincia.id_ed}}" {% if cliente.provincia_ed.id_ed == provincia.id_ed %}selected{% endif %}>
+            {{provincia.nombre_ed}}
+          </option>
+        {% endfor %}
+      </select>
+
+      <br>
+
+<input type="hidden" name="id_ed" value="{{cliente.id_ed}}">
+      <b>CEDULA</b>
+      <input type="number" name="cedula_ed" id="cedula_ed"
+             value="{{cliente.cedula_ed}}" placeholder="Ingrese la cédula"
+             class="form-control" required>
+      <b>APELLIDO</b>
+      <br>
+      <input type="text" name="apellido_ed" id="apellido_ed"
+             value="{{cliente.apellido_ed}}" placeholder="Ingrese el apellido"
+             class="form-control" required>
+      <br>
+      <b>NOMBRE</b>
+      <input type="text" name="nombre_ed" id="nombre_ed"
+             value="{{cliente.nombre_ed}}" placeholder="Ingrese el nombre"
+             class="form-control" required>
+      <br>
+      <b>DIRECCION</b>
+      <textarea name="direccion_ed" id="direccion_ed"
+                rows="3" class="form-control"
+                placeholder="Ingrese la dirección"
+      >{{cliente.direccion_ed}}</textarea>
+      <br>
+      <input type="date" name="fecha_nacimiento_ed"
+             id="fecha_nacimiento_ed"
+             value="{{cliente.fecha_nacimiento_ed|date:'Y-m-d'}}" placeholder="Ingrese la fecha de nacimiento"
+             class="form-control" required>
+      <br>
+      <input type="email" name="correo_ed" id="correo_ed"
+             value="{{cliente.correo_ed}}" placeholder="Ingrese el correo"
+             class="form-control" required>
+      <br>
+      <center>
+        <button type="submit" name="button"
+                class="btn btn-warning">
+          &nbsp;&nbsp;&nbsp;Editar&nbsp;&nbsp;&nbsp;
+        </button>&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/"
+           class="btn btn-danger">
+          Cancelar
+        </a>
+      </center>
+    </form>
+  </div>
+</div>
+{% endblock %}

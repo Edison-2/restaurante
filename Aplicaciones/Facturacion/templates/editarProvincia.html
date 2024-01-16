@@ -1,0 +1,48 @@
+{% extends "./plantilla.html" %}
+{% load static %}
+
+{% block contenido %}
+<div class="row">
+  <div class="col-md-2">
+  </div>
+  <div class="col-md-8">
+    <br> <br>
+    <form class="" action="/procesarActualizacionProvincia/" method="post" id="frm_nuevo_provincia" >
+      {% csrf_token %}
+
+      <input type="hidden" name="id_ed" value="{{provincia.id_ed}}">
+
+      <b>REGIÓN</b>
+      <input type="text" name="region_ed" id="region_ed"
+             value="{{provincia.region_ed}}" placeholder="Ingrese la región"
+             class="form-control" required>
+
+      <b>NOMBRE</b>
+      <input type="text" name="nombre_ed" id="nombre_ed"
+             value="{{provincia.nombre_ed}}" placeholder="Ingrese el nombre de la provincia"
+             class="form-control" required>
+
+      <b>CAPITAL</b>
+      <input type="text" name="capital_ed" id="capital_ed"
+             value="{{provincia.capital_ed}}" placeholder="Ingrese la capital"
+             class="form-control" required>
+
+      <b>PREFIJO</b>
+      <input type="text" name="prefijo_ed" id="prefijo_ed"
+             value="{{provincia.prefijo_ed}}" placeholder="Ingrese el prefijo"
+             class="form-control">
+
+      <br>
+      <br>
+      <center>
+        <button type="submit" name="button" class="btn btn-warning">
+          &nbsp;&nbsp;&nbsp;Editar&nbsp;&nbsp;&nbsp;
+        </button>&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/" class="btn btn-danger">
+          Cancelar
+        </a>
+      </center>
+    </form>
+  </div>
+</div>
+{% endblock %}

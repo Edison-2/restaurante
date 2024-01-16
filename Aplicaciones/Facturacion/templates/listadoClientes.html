@@ -1,0 +1,173 @@
+{% extends "./plantilla.html" %}
+{% load static %}
+{% block contenido %}
+
+    <h1>Listado de Clientes</h1>
+    <br>
+    <ul>
+        <div class="row">
+            <div class="col-md-5">
+                <form class="" action="guardarCliente/" method="post" enctype="multipart/form-data" id="frm_new_cliente">
+                    {% csrf_token %}
+                    <b>Cédula:</b>
+                    <input type="text" name="cedula_ed" value="" id="cedula_ed" placeholder="Ingrese la Cédula" class="form-control" required>
+                    <b>Apellido:</b>
+                    <input type="text" name="apellido_ed" value="" id="apellido_ed" placeholder="Ingrese el Apellido" class="form-control" required>
+                    <b>Nombre:</b>
+                    <input type="text" name="nombre_ed" value="" id="nombre_ed" placeholder="Ingrese el Nombre" class="form-control" required>
+                    <b>Fecha de Nacimiento:</b>
+                    <input type="date" name="fecha_nacimiento_ed" value="" id="fecha_nacimiento_ed" placeholder="Ingrese la Fecha de Nacimiento" class="form-control" required>
+                    <b>Provincia:</b>
+                    <select class="form-control" name="id_provincia" id="id_provincia" required>
+                      <option value="">--Seleccione la provincia--</option>
+                      {% for provincia in provincias %}
+                        <option value="{{provincia.id_ed}}" {% if cliente.provincia_ed.id_ed == provincia.id_ed %}selected{% endif %}>
+                          {{provincia.nombre_ed}}
+                        </option>
+                      {% endfor %}
+                    </select>
+                    <b>Dirección:</b>
+                    <input type="text" name="direccion_ed" value="" id="direccion_ed" placeholder="Ingrese la Dirección" class="form-control" required>
+                    <b>Correo:</b>
+                    <input type="email" name="correo_ed" value="" id="correo_ed" placeholder="Ingrese el Correo" class="form-control" required>
+                    <center>
+                        <button type="submit" name="button" class="btn btn-primary">Guardar</button>
+                        &nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;
+                        <button type="submit" name="button" class="btn btn-danger">Cancelar</button>
+                    </center>
+                </form>
+            </div>
+            <div class="col-md-7">
+                <img class="imagen" src="{% static 'img/imagen.png' %}" alt="">
+                <table class="table" id="tbl_clientes">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Cédula</th>
+                            <th>Apellido</th>
+                            <th>Nombre</th>
+                            <th>Fecha de Nacimiento</th>
+                            <th>Dirección</th>
+                            <th>Fotografía</th>
+                            <th>Correo</th>
+                            <th>Provincia</th>
+                            <th>ACCIONES</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cliente in clientes %}
+                            <tr>
+                                <td>{{ cliente.id_ed }}</td>
+                                <td>{{ cliente.cedula_ed }}</td>
+                                <td>{{ cliente.apellido_ed }}</td>
+                                <td>{{ cliente.nombre_ed }}</td>
+                                <td>{{ cliente.fecha_nacimiento_ed }}</td>
+                                <td>{{ cliente.direccion_ed }}</td>
+                                <td>{{ cliente.fotografia.url }}</td>
+                                <td>{{ cliente.correo_ed }}</td>
+                                <td>{{ cliente.provincia_ed.nombre_ed }}</td>
+                                <td>
+                                    <a href="/editarCliente/{{ cliente.id_ed }}" class="btn btn-warning">Editar</a>
+                                    <a href="javascript:void(0)" onclick="eliminarCliente('/eliminarCliente/{{ cliente.id_ed }}');" class="btn btn-danger">Eliminar</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </ul>
+
+    <script type="text/javascript">
+        function eliminarCliente(url){
+            iziToast.question({
+                timeout: 15000,
+                close: true,
+                overlay: true,
+                displayMode: 'once',
+                id: 'question',
+                zindex: 999,
+                title: 'CONFIRMACIÓN',
+                message: '¿Está seguro de eliminar el cliente seleccionado?',
+                position: 'center',
+                buttons: [
+                    ['<button><b>SI</b></button>', function (instance, toast) {
+                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                        window.location.href = url;
+                    }, true],
+                    ['<button>NO</button>', function (instance, toast) {
+                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                    }],
+                ]
+            });
+        }
+    </script>
+
+    <script type="text/javascript">
+        $("#frm_new_cliente").validate({
+            rules: {
+                "cedula_ed": {
+                    required: true
+                },
+                "apellido_ed": {
+                    required: true
+                },
+                "nombre_ed": {
+                    required: true
+                },
+                "fecha_nacimiento_ed": {
+                    required: true
+                },
+                "direccion_ed": {
+                    required: true
+                },
+                "correo_ed": {
+                    required: true
+                },
+                "provincia_ed": {
+                    required: true
+                }
+            },
+            messages: {
+                "cedula_ed": {
+                    required: "Ingrese la Cédula"
+                },
+                "apellido_ed": {
+                    required: "Ingrese el Apellido"
+                },
+                "nombre_ed": {
+                    required: "Ingrese el Nombre"
+                },
+                "fecha_nacimiento_ed": {
+                    required: "Ingrese la Fecha de Nacimiento"
+                },
+                "direccion_ed": {
+                    required: "Ingrese la Dirección"
+                },
+                "correo_ed": {
+                    required: "Ingrese el Correo"
+                },
+                "provincia_ed": {
+                    required: "Seleccione la Provincia"
+                }
+            }
+        });
+    </script>
+
+    <script type="text/javascript">
+        $('#tbl_clientes').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'pdfHtml5',
+                    messageTop: 'PDF created by PDFMake with Buttons for DataTables.'
+                },
+                'print',
+                'csv'
+            ]
+        });
+    </script>
+
+{% endblock %}
