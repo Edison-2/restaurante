@@ -12,6 +12,10 @@ urlpatterns=[
     path('listadoClientes/guardarCliente/',views.guardarCliente),
     path('editarCliente/<id_ed>' ,views.editarCliente),
     path('procesarActualizacionCliente/', views.procesarActualizacionCliente),
-
-
+    path('listadoPedidos/',views.listadoPedidos),
+    path('eliminarPedido/<id_ed>' ,views.eliminarPedido),
+    path('guardarPedido/',views.guardarPedido),
+    path('editarPedido/<id_ed>' ,views.editarPedido),
+    path('procesarActualizacionPedido/', views.procesarActualizacionPedido),
+    
 ]

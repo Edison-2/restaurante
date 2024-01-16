@@ -1,0 +1,60 @@
+{% extends "./plantilla.html" %}
+{% load static %}
+
+{% block contenido %}
+<div class="row">
+  <div class="col-md-2">
+  </div>
+  <div class="col-md-8">
+    <br> <br>
+    <form class="" action="/procesarActualizacionPedido/" method="post">
+
+      {% csrf_token %}
+      <b>Seleccione el Cliente:</b>
+      <select class="form-control" name="id_cliente" id="id_cliente" required>
+        <option value="">--Clientes--</option>
+        {% for cliente in clientes %}
+        <option value="{{cliente.id_ed}}">{{cliente.nombre_ed}}  </option>
+        {% endfor %}
+      </select>
+
+
+
+      <script type="text/javascript">
+          document.getElementById('id_cliente').value="{{pedido.cliente_ed.id_ed}}"
+      </script>
+
+<br>
+
+<input type="hidden" name="id_ed" value="{{pedido.id_ed}}">
+<b>Fecha:</b>
+<input type="date" name="fecha_ed" id="fecha_ed"
+value="{{pedido.fecha_ed|date:'Y-m-d'}}" placeholder="Ingrese la fecha de atencion"
+class="form-control" required>
+<br>
+      <b>Estado:</b>
+      <br>
+      <input type="text" name="estado_ed" id="estado_ed"
+             value="{{pedido.estado_ed}}" placeholder="Ingrese el estado"
+             class="form-control" required>
+      <br>
+      <b>Detalles:</b>
+      <input type="text" name="observaciones_ed" id="observaciones_ed"
+             value="{{pedido.observaciones_ed}}" placeholder="Ingrese la observacion"
+             class="form-control" required>
+      <br>
+
+      <center>
+        <button type="submit" name="button"
+                class="btn btn-warning">
+          &nbsp;&nbsp;&nbsp;Editar&nbsp;&nbsp;&nbsp;
+        </button>&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/"
+           class="btn btn-danger">
+          Cancelar
+        </a>
+      </center>
+    </form>
+  </div>
+</div>
+{% endblock %}

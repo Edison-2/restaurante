@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Provincia
 from .models import Cliente
+from .models import Pedido
 
 from django.contrib import messages
 # Create your views here.
@@ -101,3 +102,53 @@ def procesarActualizacionCliente(request):
 
     messages.success(request, 'Cliente ACTUALIZADO Exitosamente')
     return redirect('/listadoClientes/')
+
+def listadoPedidos(request):
+    pedidosBdd = Pedido.objects.all()
+    clienteBdd = Cliente.objects.all()
+
+    return render(request, 'listadoPedidos.html', {'pedidos': pedidosBdd, 'clientes': clienteBdd})
+
+def eliminarPedido(request,id_ed):
+    pedidoEliminar=Pedido.objects.get(id_ed=id_ed)
+    pedidoEliminar.delete()
+    messages.success(request, 'PEDIDO ELIMINADO EXITOSAMENTE')
+    return redirect('/listadoPedidos/')
+
+def guardarPedido(request):
+    id_cliente=request.POST["id_cliente"]
+    #capturando el tipo seleccionado por el usuario
+    clienteSeleccionado=Cliente.objects.get(id_ed=id_cliente)
+
+    fecha_ed=request.POST["fecha_ed"]
+    estado_ed=request.POST["estado_ed"]
+    observaciones_ed=request.POST["observaciones_ed"]
+    #Insertando datos mediante el ORM de django
+
+    pedido =Pedido.objects.create(fecha_ed=fecha_ed,estado_ed=estado_ed,observaciones_ed=observaciones_ed,cliente_ed=clienteSeleccionado)
+    messages.success(request, 'CLIENTE GUARDADO EXITOSAMENTE')
+    return redirect('/listadoPedidos/')
+
+def editarPedido(request, id_ed):
+    pedidoEditar=Pedido.objects.get(id_ed=id_ed)
+    pedidosBdd=Pedido.objects.all()
+    clienteBdd = Cliente.objects.all()
+    return  render(request, 'editarPedido.html',{'pedido':pedidoEditar,'pedidos':pedidosBdd,'clientes': clienteBdd})
+
+def procesarActualizacionPedido(request):
+    id_ed = request.POST["id_ed"]
+    id_cliente = request.POST["id_cliente"]
+    clienteSeleccionado = Cliente.objects.get(id_ed=id_cliente)
+    fecha_ed = request.POST["fecha_ed"]
+    estado_ed = request.POST["estado_ed"]
+    observaciones_ed = request.POST["observaciones_ed"]
+    # Insertando datos mediante el ORM de DJANGO
+    pedidoEditar = Pedido.objects.get(id_ed=id_ed)
+    pedidoEditar.cliente_ed = clienteSeleccionado
+    pedidoEditar.fecha_ed = fecha_ed
+    pedidoEditar.estado_ed = estado_ed
+    pedidoEditar.observaciones_ed = observaciones_ed
+    pedidoEditar.save()
+
+    messages.success(request, 'PEDIDO ACTUALIZADO CORRECTAMENTE')
+    return redirect('/listadoPedidos/')
