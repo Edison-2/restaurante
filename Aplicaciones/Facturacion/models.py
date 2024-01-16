@@ -35,7 +35,6 @@ class Pedido(models.Model):
     observaciones_ed = models.TextField()
     cliente_ed = models.ForeignKey(Cliente, null=True, blank=True, on_delete=models.PROTECT)
 
-
     def __str__(self):
         fila="{0}: {1} {2} "
         return fila.format(self.id_ed, self.fecha_ed, self.estado_ed)
@@ -61,3 +60,14 @@ class Platillo(models.Model):
     def __str__(self):
         fila="{0}: {1} {2} {3}"
         return fila.format(self.id_ed, self.nombre_ed, self.precio_ed, self.disponibilidad_ed)
+class Detalle(models.Model):
+    id_ed = models.AutoField(primary_key=True)
+    descripcion_ed = models.TextField()
+    cantidad_ed = models.IntegerField()
+    fecha_ed = models.DateField()
+    pedido_ed = models.ForeignKey(Pedido, null=True, blank=True, on_delete=models.PROTECT)
+    platillo_ed = models.ForeignKey(Platillo, null=True, blank=True, on_delete=models.PROTECT)
+
+    def __str__(self):
+        fila="{0}: {1} {2} {3}"
+        return fila.format(self.id_ed, self.descripcion_ed, self.calorias_ed, self.fecha_ed)

@@ -4,6 +4,7 @@ from .models import Cliente
 from .models import Pedido
 from .models import Tipo
 from .models import Platillo
+from .models import Detalle
 
 from django.contrib import messages
 # Create your views here.
@@ -238,3 +239,65 @@ def procesarActualizacionPlatillo(request):
 
     messages.success(request, 'PLATILLO ACTUALIZADO CORRECTAMENTE')
     return redirect('/listadoPlatillos/')
+
+def listadoDetalles(request):
+    detalleplatillosBdd = DetallePlatillo.objects.all()
+
+    pedidoBdd = Pedido.objects.all()
+    platilloBdd = Platillo.objects.all()
+
+    return render(request, 'listadoDetalles.html', {'detalles': detalleplatillosBdd, 'platillos': platilloBdd,'pedidos': pedidoBdd})
+
+def eliminarDetalle(request,id_ed):
+    detalleEliminar=DetallePlatillo.objects.get(id_ed=id_ed)
+    detalleEliminar.delete()
+    messages.success(request, 'DETALLE ELIMINADO EXITOSAMENTE')
+    return redirect('/listadoDetalles/')
+
+def guardarDetalle(request):
+    id_platillo=request.POST["id_platillo"]
+    id_pedido=request.POST["id_pedido"]
+    #capturando el tipo seleccionado por el usuario
+    platilloSeleccionado=Platillo.objects.get(id_ed=id_platillo)
+    pedidoSeleccionado=Pedido.objects.get(id_ed=id_pedido)
+
+    descripcion_ed=request.POST["descripcion_ed"]
+    cantidad_ed=request.POST["cantidad_ed"]
+    fecha_ed=request.POST["fecha_ed"]
+    #Insertando datos mediante el ORM de django
+
+    detalle =DetallePlatillo.objects.create(descripcion_ed=descripcion_ed,cantidad_ed=cantidad_ed,fecha_ed=fecha_ed,platillo_ed=platilloSeleccionado,pedido_ed=pedidoSeleccionado)
+    messages.success(request, 'DETALLE DEL PLATILLO GUARDADO EXITOSAMENTE')
+    return redirect('/listadoDetalles/')
+
+
+def editarDetalle(request, id_ed):
+    detalleEditar=DetallePlatillo.objects.get(id_ed=id_ed)
+    detallesBdd=DetallePlatillo.objects.all()
+    platilloBdd=Platillo.objects.all()
+    pedidoBdd=Pedido.objects.all()
+    return  render(request, 'editarDetalle.html',{'detalle':detalleEditar,'detalles':detallesBdd, 'platillos':platilloBdd, 'pedidos':pedidoBdd})
+
+
+def procesarActualizacionDetalle(request):
+    id_ed = request.POST["id_ed"]
+    id_platillo = request.POST["id_platillo"]
+    platilloSeleccionado = Platillo.objects.get(id_ed=id_platillo)
+    id_pedido = request.POST["id_pedido"]
+    pedidoSeleccionado = Pedido.objects.get(id_ed=id_pedido)
+    descripcion_ed = request.POST["descripcion_ed"]
+    cantidad_ed = request.POST["cantidad_ed"]
+    fecha_ed = request.POST["fecha_ed"]
+
+
+    # Insertando datos mediante el ORM de DJANGO
+    detalleEditar = DetallePlatillo.objects.get(id_ed=id_ed)
+    detalleEditar.platillo_ed = platilloSeleccionado  # Corregido el nombre del campo
+    detalleEditar.pedido_ed = pedidoSeleccionado  # Corregido el nombre del campo
+    detalleEditar.descripcion_ed = descripcion_ed
+    detalleEditar.cantidad_ed = cantidad_ed  # Corregido el nombre del campo
+    detalleEditar.fecha_ed = fecha_ed
+    detalleEditar.save()
+
+    messages.success(request, 'DETALLE PLATILLO ACTUALIZADO CORRECTAMENTE')
+    return redirect('/listadoDetalles/')

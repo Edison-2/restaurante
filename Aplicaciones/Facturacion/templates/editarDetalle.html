@@ -1,0 +1,70 @@
+{% extends "./plantilla.html" %}
+{% load static %}
+
+{% block contenido %}
+<div class="row">
+  <div class="col-md-2">
+  </div>
+  <div class="col-md-8">
+    <br> <br>
+    <form class="" action="/procesarActualizacionDetalle/" method="post">
+
+      {% csrf_token %}
+      <b>Seleccione el platillo</b>
+      <select class="form-control" name="id_platillo" id="id_platillo" required>
+        <option value="">--Seleccione el platillo  --</option>
+        {% for platillo in platillos %}
+        <option value="{{platillo.id_ed}}">{{platillo.nombre_ed}}  </option>
+        {% endfor %}
+      </select>
+      <b>Seleccione el pedido</b>
+      <select class="form-control" name="id_pedido" id="id_pedido" required>
+        <option value="">--Seleccione el pedido  --</option>
+        {% for pedido in pedidos %}
+        <option value="{{pedido.id_ed}}">{{pedido.estado_ed}}-{{pedido.observaciones_ed}}-{{detalle.pedido_ed.cliente_ed.nombre_ed}}  </option>
+        {% endfor %}
+      </select>
+
+      <script type="text/javascript">
+          document.getElementById('id_platillo').value="{{detalle.platillo_ed.id_ed}}"
+      </script>
+
+      <script type="text/javascript">
+          document.getElementById('id_pedido').value="{{detalle.pedido_ed.id_ed}}"
+      </script>
+
+<br>
+
+<input type="hidden" name="id_ed" value="{{detalle.id_ed}}">
+<b>DESCRIPCION</b>
+<br>
+<input type="text" name="descripcion_ed" id="descripcion_ed"
+       value="{{detalle.descripcion_ed}}" placeholder="Ingrese la descripcion"
+       class="form-control" required>
+<br>
+      <b>Cantidad:</b>
+      <br>
+      <input type="number" name="cantidad_ed" id="cantidad_ed"
+             value="{{detalle.cantidad_ed}}" placeholder="Ingrese las cantidad"
+             class="form-control" required>
+      <br>
+      <b>FECHA </b>
+      <input type="date" name="fecha_ed" id="fecha_ed"
+      value="{{detalle.fecha_ed|date:'Y-m-d'}}" placeholder="Ingrese la fecha "
+      class="form-control" required>
+      <br>
+
+      <center>
+        <button type="submit" name="button"
+                class="btn btn-warning">
+          &nbsp;&nbsp;&nbsp;Editar&nbsp;&nbsp;&nbsp;
+        </button>&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/"
+           class="btn btn-danger">
+          Cancelar
+        </a>
+      </center>
+    </form>
+  </div>
+</div>
+{% endblock %}

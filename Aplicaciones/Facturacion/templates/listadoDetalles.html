@@ -1,0 +1,196 @@
+{% extends "./plantilla.html"%}
+  {% load static %}
+  {%block contenido%}
+
+    <h1>LISTADO DE DETALLES</h1>
+    <br>
+    <ul>
+
+        <div class="row">
+
+              <div class="col-md-5" style="overflow-y: auto; max-height: 400px;">
+                <form action="/guardarDetalle/" method="post" enctype="multipart/form-data" id="frm_nuevo_detalle">
+                    {% csrf_token %}
+                    <b>SELECCIONE EL PEDIDO</b>
+                    <select class="form-control" name="id_pedido" required>
+                      <option value="">--SELECCIONE EL PEDIDO  </option>
+                      {% for pedido in pedidos %}
+                      <option value="{{pedido.id_ed}}">
+                        {{pedido.estado_ed}}-{{pedido.observaciones_ed}}--{{pedido.cliente_ed.nombre_ed}}
+                      </option>
+                      {% endfor %}
+                    </select>
+                    <br>
+                    <b>SELECCIONE EL PLATILLO</b>
+                    <select class="form-control" name="id_platillo" required>
+                      <option value="">--SELECCIONE EL PLATILLO  </option>
+                      {% for platillo in platillos %}
+                      <option value="{{platillo.id_ed}}">
+                        {{platillo.nombre_ed}}-{{platillo.precio_ed}}
+                      </option>
+                      {% endfor %}
+                    </select>
+
+                    <br>
+
+                      <b>DESCRIPCION: </b>
+                      <input type="text" name="descripcion_ed" id="descripcion_ed" class="form-control" placeholder="Ingrese el estado(Disponible-No disponible)" required>
+                      <br>
+                      <b>cantidad:</b>
+                      <input type="text" name="cantidad_ed" value="" id="colorias_ed " placeholder="Ingrese las cantidad" class="form-control" required>
+                        <br>
+                        <b>FECHA:</b>
+                        <input type="date" name="fecha_ed" value="" class="form-control" placeholder="Ingrese la fecha " required>
+
+                        <br>
+
+                    <center>
+                        <button type="submit" name="button" class="btn btn-primary">Guardar</button>
+                        &nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;
+                        <button type="submit" name="button" class="btn btn-danger">Cancelar</button>
+                    </center>
+                </form>
+            </div>
+            <div class="col-md-7">
+        <div class="d-flex justify-content-center align-items-center">
+          <img class="imagen img-fluid" src="{% static 'img/uni.png' %}" alt="" style="max-width: 800px; height: auto;">
+        </div>
+        <br>
+                <table class="table" id="tbl_detalle">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>DESCRIPCION</th>
+                            <th>cantidad</th>
+                            <th>FECHA</th>
+                            <th>PEDIDO</th>
+                            <th>PLATILLO</th>
+                            <th>ACCIONES</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for detalle in detalles %}
+                            <tr>
+                                <td>{{ detalle.id_ed }}</td>
+                                <td>{{ detalle.descripcion_ed }}</td>
+                                <td>{{ detalle.cantidad_ed }}</td>
+                                <td>{{ detalle.fecha_ed }}</td>
+                                <td>{{detalle.pedido_ed.estado_ed}}</td>
+                                <td>{{detalle.platillo_ed.nombre_ed}}</td>
+
+
+                                <td>
+                                    <a href="/editarDetalle/{{detalle.id_ed}}" class="btn btn-warning">Editar</a>
+                                    <a href="javascript:void(0)"
+                                    onclick="eliminarDetalle('/eliminarDetalle/{{de.id_ed}}');"class="btn btn-danger">Eliminar</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <!-- Agregar una fila para la imagen debajo de la tabla -->
+            <br>
+
+
+    </ul>
+
+    <script type="text/javascript">
+function eliminarDetalle(url) {
+  iziToast.question({
+      timeout: 15000,
+      close: true,
+      overlay: true,
+      displayMode: 'once',
+      id: 'question',
+      zindex: 999,
+      title: 'CONFIRMACIÓN',
+      message: '¿Está seguro de eliminar el cliente seleccionado?',
+      position: 'center',
+      buttons: [
+          ['<button><b>SI</b></button>', function (instance, toast) {
+              instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+              window.location.href=url;
+          }, true],
+          ['<button>NO</button>', function (instance, toast) {
+
+              instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+
+          }],
+      ]
+  });
+}
+</script>
+<script type="text/javascript">
+   $("#frm_nuevo_detalle").validate({
+     rules:{
+           "id_pedido":{
+             required:true
+           },
+           "id_platillo":{
+             required:true
+           },
+       "fecha_ed":{
+         required:true,
+         date:true
+
+       },
+       "descripcion_ed":{
+         required:true,
+       },
+       "cantidad_ed":{
+         required:true,
+         number:true
+       }
+
+
+     },
+     messages:{
+       "id_pedido":{
+             required:"POR FAVOR SELECCIONE EL PEDIDO"
+           },
+
+           "id_platillo":{
+                 required:"POR FAVOR SELECCIONE EL PLATILLO"
+               },
+
+       "fecha_ed":{
+         required:"DEBE INGRESAR LA FECHA DEL PEDIDO",
+         date:"SIGA EL MODELO"
+
+       },
+       "descripcion_ed": {
+         required: "DEBE INGRESAR LA DESCRIPCION DEL PEDIDO",
+       },
+       "cantidad_ed":{
+         required:"DEBE INGRESAR LAS cantidad DEL PEDIDO",
+         number:"DEBE INGRESAR SOLO NUMEROS"
+
+       }
+
+     }
+   });
+</script>
+
+    <script type="text/javascript">
+           //let table = new DataTable('#tbl_clientes');
+            $('#tbl_pedidos').DataTable( {
+              "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+            },
+              dom: 'Bfrtip',
+              buttons: [
+                  {
+                      extend: 'pdfHtml5',
+                      messageTop: 'REPORTE DE CLIENTES - DJANGO Y DATATABLES.'
+                  },
+                  'print',
+                  'csv'
+              ]
+            } );
+          </script>
+
+
+  {%endblock%}
