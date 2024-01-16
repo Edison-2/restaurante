@@ -32,5 +32,10 @@ urlpatterns=[
     path('guardarDetalle/',views.guardarDetalle),
     path('editarDetalle/<id_ed>' ,views.editarDetalle),
     path('procesarActualizacionDetalle/', views.procesarActualizacionDetalle),
+    path('listadoIngredientes/',views.listadoIngredientes),
+    path('eliminarIngrediente/<id_ed>' ,views.eliminarIngrediente),
+    path('guardarIngrediente/',views.guardarIngrediente),
+    path('editarIngrediente/<id_ed>' ,views.editarIngrediente),
+    path('procesarActualizacionIngrediente/', views.procesarActualizacionIngrediente),
 
 ]

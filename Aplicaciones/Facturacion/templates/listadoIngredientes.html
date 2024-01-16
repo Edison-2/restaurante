@@ -1,0 +1,177 @@
+{% extends "./plantilla.html"%}
+  {% load static %}
+  {%block contenido%}
+
+    <h1>LISTADO DE INGREDIENTES</h1>
+    <br>
+    <ul>
+
+        <div class="row">
+          <div class="col-md-5" style="overflow-y: auto; max-height: 400px;">
+                <form action="/guardarIngrediente/" method="post" enctype="multipart/form-data" id="frm_nuevo_ingrediente">
+                    {% csrf_token %}
+                    <br>
+                    <b>NOMBRE:</b>
+                    <input type="text" name="nombre_ed" value="" id="nombre_ed" placeholder="Ingrese el nombre" class="form-control" required>
+                    <br>
+                    <b>CANTIDAD DISPONIBLE:</b>
+                    <input type="CharField" name="cantidad_disponible_ed" value="" id="cantidad_disponible_ed" placeholder="Ingrese la cantidad disponible" class="form-control" required>
+                    <br>
+                    <b>UNIDAD DE MEDIDA:</b>
+                    <input type="CharField" name="unidad_medida_ed" value="" id="unidad_medida_ed" placeholder="Ingrese la unidad de medida" class="form-control" required>
+                    <br>
+                    <b>FECHA DE CADUCIDAD:</b>
+                    <input type="date" name="fecha_caducidad_ed" value="" class="form-control" placeholder="Ingrese la fecha de caducidad " required>
+                    <br>
+                    <b>FOTOGRAFIA:</b>
+                    <input type="file" name="fotografia" accept="image/*" id="fotografia" required>
+                    <br>
+
+                    <center>
+                        <button type="submit" name="button" class="btn btn-primary">Guardar</button>
+                        &nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;
+                        <button type="submit" name="button" class="btn btn-danger">Cancelar</button>
+                    </center>
+                </form>
+            </div>
+            <div class="col-md-7">
+        <div class="d-flex justify-content-center align-items-center">
+          <img class="imagen img-fluid" src="{% static 'img/uni.png' %}" alt="" style="max-width: 800px; height: auto;">
+        </div>
+        <br>
+                <table class="table" id="tbl_ingredientes">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>NOMBRE</th>
+                            <th>CANTIDAD DISPONIBLE</th>
+                            <th>UNIDAD DE MEDIDA</th>
+                            <th>FECHA DE CADUCIDAD</th>
+                            <th>FOTOGRAFIA</th>
+                            <th>ACCIONES</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ingrediente in ingredientes %}
+                            <tr>
+                                <td>{{ ingrediente.id_ed }}</td>
+                                <td>{{ ingrediente.nombre_ed }}</td>
+                                <td>{{ ingrediente.cantidad_disponible_ed }}</td>
+                                <td>{{ ingrediente.unidad_medida_ed }}</td>
+                                <td>{{ ingrediente.fecha_caducidad_ed }}</td>
+                                <td>{% if ingrediente.fotografia %}
+                                    <a href="{{ingrediente.fotografia.url}}" target="_blank">
+                                        <img src="{{ingrediente.fotografia.url}}" alt="" height="50px"></a>
+                                    {% else %}
+                                    <b>N/A</b>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="/editarIngrediente/{{ingrediente.id_ed}}" class="btn btn-warning">Editar</a>
+                                    <a href="javascript:void(0)"
+                                    onclick="eliminarIngrediente('/eliminarIngrediente/{{ingrediente.id_ed}}');"class="btn btn-danger">Eliminar</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <!-- Agregar una fila para la imagen debajo de la tabla -->
+            <br>
+
+
+    </ul>
+
+    <script type="text/javascript">
+function eliminarIngrediente(url) {
+  iziToast.question({
+      timeout: 15000,
+      close: true,
+      overlay: true,
+      displayMode: 'once',
+      id: 'question',
+      zindex: 999,
+      title: 'CONFIRMACIÓN',
+      message: '¿Está seguro de eliminar el cliente seleccionado?',
+      position: 'center',
+      buttons: [
+          ['<button><b>SI</b></button>', function (instance, toast) {
+              instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+              window.location.href=url;
+          }, true],
+          ['<button>NO</button>', function (instance, toast) {
+
+              instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+
+          }],
+      ]
+  });
+}
+</script>
+    <script type="text/javascript">
+       $("#frm_nuevo_ingrediente").validate({
+         rules:{
+           "nombre_ed":{
+             required:true
+
+           },
+           "cantidad_disponible_ed":{
+             required:true,
+           },
+           "unidad_medida_ed":{
+             required:true
+           },
+           "fotografia":{
+             required:true
+           },
+           "fecha_caducidad_ed":{
+             required:true
+           },
+
+         },
+         messages:{
+
+           "nombre_ed":{
+             required:"DEBE INGRESAR EL NOMBRE DEL INGREDIENTE"
+
+           },
+           "cantidad_disponible_ed": {
+             required: "DEBE INGRESAR LA CANTIDAD DISPONIBLE DEL INGREDIENTE",
+
+           },
+           "unidad_medida_ed":{
+             required:"DEBE INGRESAR LA UNIDAD DE MEDIDA DEL INGREDIENTE"
+
+           },
+           "fotografia":{
+             required:"SELECCIONE LA FOTOGRAFIA DEL INGREDIENTE"
+           },
+           "fecha_caducidad_ed":{
+             required:"SELECCIONE LA FECHA DE CADUCIDAD DEL INGREDIENTE"
+           }
+         }
+       });
+    </script>
+
+    <script type="text/javascript">
+           //let table = new DataTable('#tbl_clientes');
+            $('#tbl_ingredientes').DataTable( {
+              "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+            },
+              dom: 'Bfrtip',
+              buttons: [
+                  {
+                      extend: 'pdfHtml5',
+                      messageTop: 'REPORTE DE CLIENTES - DJANGO Y DATATABLES.'
+                  },
+                  'print',
+                  'csv'
+              ]
+            } );
+          </script>
+
+
+  {%endblock%}

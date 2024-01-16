@@ -5,6 +5,7 @@ from .models import Pedido
 from .models import Tipo
 from .models import Platillo
 from .models import Detalle
+from .models import Ingrediente
 
 from django.contrib import messages
 # Create your views here.
@@ -241,7 +242,7 @@ def procesarActualizacionPlatillo(request):
     return redirect('/listadoPlatillos/')
 
 def listadoDetalles(request):
-    detalleplatillosBdd = DetallePlatillo.objects.all()
+    detalleplatillosBdd = Detalle.objects.all()
 
     pedidoBdd = Pedido.objects.all()
     platilloBdd = Platillo.objects.all()
@@ -249,7 +250,7 @@ def listadoDetalles(request):
     return render(request, 'listadoDetalles.html', {'detalles': detalleplatillosBdd, 'platillos': platilloBdd,'pedidos': pedidoBdd})
 
 def eliminarDetalle(request,id_ed):
-    detalleEliminar=DetallePlatillo.objects.get(id_ed=id_ed)
+    detalleEliminar=Detalle.objects.get(id_ed=id_ed)
     detalleEliminar.delete()
     messages.success(request, 'DETALLE ELIMINADO EXITOSAMENTE')
     return redirect('/listadoDetalles/')
@@ -266,14 +267,14 @@ def guardarDetalle(request):
     fecha_ed=request.POST["fecha_ed"]
     #Insertando datos mediante el ORM de django
 
-    detalle =DetallePlatillo.objects.create(descripcion_ed=descripcion_ed,cantidad_ed=cantidad_ed,fecha_ed=fecha_ed,platillo_ed=platilloSeleccionado,pedido_ed=pedidoSeleccionado)
+    detalle =Detalle.objects.create(descripcion_ed=descripcion_ed,cantidad_ed=cantidad_ed,fecha_ed=fecha_ed,platillo_ed=platilloSeleccionado,pedido_ed=pedidoSeleccionado)
     messages.success(request, 'DETALLE DEL PLATILLO GUARDADO EXITOSAMENTE')
     return redirect('/listadoDetalles/')
 
 
 def editarDetalle(request, id_ed):
-    detalleEditar=DetallePlatillo.objects.get(id_ed=id_ed)
-    detallesBdd=DetallePlatillo.objects.all()
+    detalleEditar=Detalle.objects.get(id_ed=id_ed)
+    detallesBdd=Detalle.objects.all()
     platilloBdd=Platillo.objects.all()
     pedidoBdd=Pedido.objects.all()
     return  render(request, 'editarDetalle.html',{'detalle':detalleEditar,'detalles':detallesBdd, 'platillos':platilloBdd, 'pedidos':pedidoBdd})
@@ -291,7 +292,7 @@ def procesarActualizacionDetalle(request):
 
 
     # Insertando datos mediante el ORM de DJANGO
-    detalleEditar = DetallePlatillo.objects.get(id_ed=id_ed)
+    detalleEditar = Detalle.objects.get(id_ed=id_ed)
     detalleEditar.platillo_ed = platilloSeleccionado  # Corregido el nombre del campo
     detalleEditar.pedido_ed = pedidoSeleccionado  # Corregido el nombre del campo
     detalleEditar.descripcion_ed = descripcion_ed
@@ -301,3 +302,51 @@ def procesarActualizacionDetalle(request):
 
     messages.success(request, 'DETALLE PLATILLO ACTUALIZADO CORRECTAMENTE')
     return redirect('/listadoDetalles/')
+
+def listadoIngredientes(request):
+    ingredientesBdd = Ingrediente.objects.all()
+    return render(request, 'listadoIngredientes.html', {'ingredientes': ingredientesBdd})
+
+def eliminarIngrediente(request,id_ed):
+    ingredienteEliminar=Ingrediente.objects.get(id_ed=id_ed)
+    ingredienteEliminar.delete()
+    messages.success(request, 'INGREDIENTE ELIMINADO EXITOSAMENTE')
+    return redirect('/listadoIngredientes/')
+
+
+def guardarIngrediente(request):
+    nombre_ed = request.POST["nombre_ed"]
+    descripcion_ed=request.POST["descripcion_ed"]
+    unidad_medida_ed=request.POST["unidad_medida_ed"]
+    fecha_caducidad_ed=request.POST["fecha_caducidad_ed"]
+    fotografia=request.FILES.get("fotografia")
+    #Insertando datos mediante el ORM de django
+    ingrediente =Ingrediente.objects.create(nombre_ed=nombre_ed,descripcion_ed=descripcion_ed,unidad_medida_ed=unidad_medida_ed,fecha_caducidad_ed=fecha_caducidad_ed,fotografia=fotografia)
+    messages.success(request, 'INGREDIENTE GUARDADO EXITOSAMENTE')
+    return redirect('/listadoIngredientes')
+
+def editarIngrediente(request, id_ed):
+    ingredienteEditar=Ingrediente.objects.get(id_ed=id_ed)
+    ingredientesBdd=Ingrediente.objects.all()
+    return  render(request, 'editarIngrediente.html',{'ingrediente':ingredienteEditar,'ingredientes':ingredientesBdd})
+
+
+def procesarActualizacionIngrediente(request):
+    id_ed=request.POST["id_ed"]
+    nombre_ed=request.POST["nombre_ed"]
+    descripcion_ed=request.POST["descripcion_ed"]
+    unidad_medida_ed=request.POST["unidad_medida_ed"]
+    fecha_caducidad_ed=request.POST["fecha_caducidad_ed"]
+    fotografia=request.POST["fotografia"]
+
+    #Insertando datos mediante el ORM de DJANGO
+    ingredienteEditar=Ingrediente.objects.get(id_ed=id_ed)
+    ingredienteEditar.nombre_ed=nombre_ed
+    ingredienteEditar.descripcion_ed=descripcion_ed
+    ingredienteEditar.unidad_medida_ed=unidad_medida_ed
+    ingredienteEditar.fecha_caducidad_ed=fecha_caducidad_ed
+    ingredienteEditar.fotografia=fotografia
+    ingredienteEditar.save()
+    messages.success(request,
+      'PROVINCIA ACTUALIZADA EXITOSAMENTE')
+    return redirect('/listadoIngredientes/')
