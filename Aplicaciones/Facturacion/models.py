@@ -84,3 +84,15 @@ class Ingrediente(models.Model):
     def __str__(self):
         fila="{0}: {1} {2} {3} {4}"
         return fila.format(self.id_ed, self.nombre_ed, self.descripcion_ed, self.unidad_medida_ed, self.fecha_caducidad_ed, self.fotografia)
+
+class Receta(models.Model):
+    id_ed = models.AutoField(primary_key=True)
+    cantidad_ed = models.CharField(max_length=100)
+    procedimiento_ed = models.CharField(max_length=500)
+    platillo_ed = models.ForeignKey(Platillo, on_delete=models.PROTECT)
+    ingrediente_ed = models.ForeignKey(Ingrediente, null=True, blank=True, on_delete=models.PROTECT)
+
+
+    def __str__(self):
+        fila="{0}: {1} {2} "
+        return fila.format(self.id_ed, self.cantidad_ed, self.procedimiento_ed)

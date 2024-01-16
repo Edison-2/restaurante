@@ -6,6 +6,7 @@ from .models import Tipo
 from .models import Platillo
 from .models import Detalle
 from .models import Ingrediente
+from .models import Receta
 
 from django.contrib import messages
 # Create your views here.
@@ -350,3 +351,63 @@ def procesarActualizacionIngrediente(request):
     messages.success(request,
       'PROVINCIA ACTUALIZADA EXITOSAMENTE')
     return redirect('/listadoIngredientes/')
+
+def listadoRecetas(request):
+    recetasBdd = Receta.objects.all()
+
+    ingredienteBdd = Ingrediente.objects.all()
+    platilloBdd = Platillo.objects.all()
+
+    return render(request, 'listadoRecetas.html', {'recetas': recetasBdd, 'ingredientes': ingredienteBdd,'platillos': platilloBdd})
+
+def eliminarReceta(request,id_ed):
+    recetaEliminar=Receta.objects.get(id_ed=id_ed)
+    recetaEliminar.delete()
+    messages.success(request, 'RECETA ELIMINADA EXITOSAMENTE')
+    return redirect('/listadoRecetas/')
+
+
+def guardarReceta(request):
+    id_platillo=request.POST["id_platillo"]
+    id_ingrediente=request.POST["id_ingrediente"]
+    #capturando el tipo seleccionado por el usuario
+    platilloSeleccionado=Platillo.objects.get(id_ed=id_platillo)
+    ingredienteSeleccionado=Ingrediente.objects.get(id_ed=id_ingrediente)
+
+    cantidad_ed=request.POST["cantidad_ed"]
+    procedimiento_ed=request.POST["procedimiento_ed"]
+    #Insertando datos mediante el ORM de django
+
+    receta =Receta.objects.create(cantidad_ed=cantidad_ed,procedimiento_ed=procedimiento_ed,platillo_ed=platilloSeleccionado,ingrediente_ed=ingredienteSeleccionado)
+    messages.success(request, 'RECETA DEL PLATILLO GUARDADO EXITOSAMENTE')
+    return redirect('/listadoRecetas/')
+
+def editarReceta(request, id_ed):
+    recetaEditar=Receta.objects.get(id_ed=id_ed)
+    recetasBdd=Receta.objects.all()
+    platilloBdd=Platillo.objects.all()
+    ingredienteBdd=Ingrediente.objects.all()
+    return  render(request, 'editarReceta.html',{'receta':recetaEditar,'recetas':recetasBdd, 'platillos':platilloBdd, 'ingredientes':ingredienteBdd})
+
+def procesarActualizacionReceta(request):
+    id_ed = request.POST["id_ed"]
+    id_platillo = request.POST["id_platillo"]
+    platilloSeleccionado = Platillo.objects.get(id_ed=id_platillo)
+    id_ingrediente = request.POST["id_ingrediente"]
+    ingredienteSeleccionado = Ingrediente.objects.get(id_ed=id_ingrediente)
+
+
+    cantidad_ed = request.POST["cantidad_ed"]
+    procedimiento_ed = request.POST["procedimiento_ed"]
+
+
+    # Insertando datos mediante el ORM de DJANGO
+    recetaEditar = Receta.objects.get(id_ed=id_ed)
+    recetaEditar.platillo_ed = platilloSeleccionado  # Corregido el nombre del campo
+    recetaEditar.ingrediente_ed = ingredienteSeleccionado  # Corregido el nombre del campo
+    recetaEditar.cantidad_ed = cantidad_ed
+    recetaEditar.procedimiento_ed = procedimiento_ed  # Corregido el nombre del campo
+    recetaEditar.save()
+
+    messages.success(request, 'RECETA  ACTUALIZADA CORRECTAMENTE')
+    return redirect('/listadoRecetas/')
