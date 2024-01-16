@@ -1,0 +1,134 @@
+{% extends "./plantilla.html" %}
+{% load static %}
+{% block contenido %}
+
+    <h1>Listado de Provincias</h1>
+    <br>
+    <ul>
+        <div class="row">
+            <div class="col-md-5">
+                <form class="" action="guardarProvincia/" method="post" enctype="multipart/form-data" id="frm_new_provincia">
+                    {% csrf_token %}
+                    <b>Región:</b>
+                    <input type="text" name="region_ed" value="" id="region_ed" placeholder="Ingrese la Región" class="form-control" required>
+                    <b>Nombre:</b>
+                    <input type="text" name="nombre_ed" value="" id="nombre_ed" placeholder="Ingrese el Nombre" class="form-control" required>
+                    <b>Capital:</b>
+                    <input type="text" name="capital_ed" value="" id="capital_ed" placeholder="Ingrese la Capital" class="form-control" required>
+                    <b>Prefijo de la Provincia:</b>
+                    <input type="text" name="prefijo_ed" value="" id="prefijo_ed" placeholder="Ingrese el Prefijo" class="form-control" required>
+                    <center>
+                        <button type="submit" name="button" class="btn btn-primary">Guardar</button>
+                        &nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;
+                        <button type="submit" name="button" class="btn btn-danger">Cancelar</button>
+                    </center>
+                </form>
+            </div>
+            <div class="col-md-7">
+                <img class="imagen" src="{% static 'img/imagen.png' %}" alt="">
+                <table class="table" id="tbl_provincias">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Región</th>
+                            <th>Nombre</th>
+                            <th>Capital</th>
+                            <th>Prefijo</th>
+                            <th>ACCIONES</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for provincia in provincias %}
+                            <tr>
+                                <td>{{ provincia.id_ed }}</td>
+                                <td>{{ provincia.region_ed }}</td>
+                                <td>{{ provincia.nombre_ed }}</td>
+                                <td>{{ provincia.capital_ed }}</td>
+                                <td>{{ provincia.prefijo_ed }}</td>
+                                <td>
+                                    <a href="/editarProvincia/{{ provincia.id_ed }}" class="btn btn-warning">Editar</a>
+                                    <a href="javascript:void(0)" onclick="eliminarProvincia('/eliminarProvincia/{{ provincia.id_ed }}');" class="btn btn-danger">Eliminar</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </ul>
+
+    <script type="text/javascript">
+        function eliminarProvincia(url){
+            iziToast.question({
+                timeout: 15000,
+                close: true,
+                overlay: true,
+                displayMode: 'once',
+                id: 'question',
+                zindex: 999,
+                title: 'CONFIRMACIÓN',
+                message: '¿Está seguro de eliminar la provincia seleccionada?',
+                position: 'center',
+                buttons: [
+                    ['<button><b>SI</b></button>', function (instance, toast) {
+                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                        window.location.href = url;
+                    }, true],
+                    ['<button>NO</button>', function (instance, toast) {
+                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                    }],
+                ]
+            });
+        }
+    </script>
+
+    <script type="text/javascript">
+        $("#frm_new_provincia").validate({
+            rules: {
+                "region_ed": {
+                    required: true
+                },
+                "nombre_ed": {
+                    required: true
+                },
+                "capital_ed": {
+                    required: true
+                },
+                "prefijo_ed": {
+                    required: true
+                }
+            },
+            messages: {
+                "region_ed": {
+                    required: "Ingrese la Región"
+                },
+                "nombre_ed": {
+                    required: "Ingrese el Nombre"
+                },
+                "capital_ed": {
+                    required: "Ingrese la Capital"
+                },
+                "prefijo_ed": {
+                    required: "Ingrese el Prefijo"
+                }
+            }
+        });
+    </script>
+
+    <script type="text/javascript">
+        $('#tbl_provincias').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'pdfHtml5',
+                    messageTop: 'PDF created by PDFMake with Buttons for DataTables.'
+                },
+                'print',
+                'csv'
+            ]
+        });
+    </script>
+
+{% endblock %}
